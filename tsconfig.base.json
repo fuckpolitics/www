@@ -14,7 +14,11 @@
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
-    "paths": {}
+    "paths": {
+      "@www/common": ["libs/common/src/index.ts"],
+      "@www/database": ["libs/database/src/index.ts"],
+      "@www/grpc-client": ["libs/grpc-client/src/index.ts"]
+    }
   },
   "exclude": ["node_modules", "tmp"]
 }
