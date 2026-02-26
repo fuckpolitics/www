@@ -9,6 +9,7 @@
     "mg:run:tsx": "tsx --tsconfig tsconfig.base.json libs/database/src/cli/run-migrations.ts",
     "mg:r": "ts-node -r ts-node/register -r tsconfig-paths/register libs/database/src/cli/revert-migration.ts",
     "mg:s": "ts-node -r ts-node/register -r tsconfig-paths/register libs/database/src/cli/show-migrations.ts",
+    "proto:gen": "rm -rf libs/common/src/generated-grpc/* && protoc --plugin=./node_modules/.bin/protoc-gen-ts_proto -I ./libs/common/src/proto --ts_proto_out=libs/common/src/generated-grpc --ts_proto_opt=nestJs=true ./libs/common/src/proto/*.proto",
     "dev": "nx run-many -t serve"
   },
   "private": true,
@@ -73,6 +74,7 @@
     "prettier": "~3.6.2",
     "ts-jest": "^29.4.0",
     "ts-node": "10.9.1",
+    "ts-proto": "^2.11.2",
     "tsconfig-paths": "^4.2.0",
     "tslib": "^2.3.0",
     "tsx": "^4.21.0",
