@@ -8,12 +8,13 @@ export class MicroservicesService {
 
   constructor(private readonly grpcClientService: GrpcClientService) {}
 
-  async validateToken(token: string): Promise<{ valid: boolean; userId?: string }> {
-    const result = await this.callMicroservice<{ valid: boolean; userId?: string }>(
-      normalizeServiceName('auth'),
-      'Auth.validateToken',
-      { token },
-    );
+  async validateToken(
+    token: string,
+  ): Promise<{ valid: boolean; userId?: string }> {
+    const result = await this.callMicroservice<{
+      valid: boolean;
+      userId?: string;
+    }>(normalizeServiceName('auth'), 'Auth.validateToken', { token }, {});
     return result;
   }
 
@@ -21,16 +22,18 @@ export class MicroservicesService {
     serviceName: string,
     method: string,
     data: any,
+    metadata: unknown,
   ): Promise<T> {
     this.logger.log(`Calling ${serviceName}.${method} with data:`, data);
-    
+
     try {
       const result = await this.grpcClientService.callService<T>(
         serviceName,
         method,
         data,
+        metadata,
       );
-      
+
       this.logger.log(`Response from ${serviceName}.${method}:`, result);
       return result;
     } catch (error) {

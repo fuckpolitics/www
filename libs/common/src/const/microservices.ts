@@ -21,6 +21,12 @@ export const MICROSERVICES = {
     validateToken: { service: 'auth', method: 'validateToken', isInternal: true },
     refreshToken: { service: 'auth', method: 'refreshToken' },
   },
+  room: {
+    service: 'room',
+    join: { service: 'room', method: 'join', requiresAuth: true },
+    leave: { service: 'room', method: 'leave', requiresAuth: true },
+    getRoomInfo: { service: 'room', method: 'getRoomInfo', requiresAuth: true },
+  },
 } as const;
 
 const METHOD_ACCESS_MAP: Record<string, Record<string, { requiresAuth?: boolean; isInternal?: boolean }>> = {};
@@ -40,6 +46,9 @@ for (const [, svc] of Object.entries(MICROSERVICES)) {
   }
 }
 
-export function getMethodAccess(serviceName: string, methodName: string): { requiresAuth?: boolean; isInternal?: boolean } | null {
+export function getMethodAccess(
+  serviceName: string,
+  methodName: string,
+): { requiresAuth?: boolean; isInternal?: boolean } | null {
   return METHOD_ACCESS_MAP[serviceName]?.[methodName] ?? null;
 }

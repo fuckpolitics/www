@@ -59,26 +59,31 @@ export interface RefreshTokenResponse {
 export const AUTH_PACKAGE_NAME = "auth";
 
 export interface AuthClient {
-  register(request: RegisterRequest): Observable<RegisterResponse>;
+  register(request: RegisterRequest, ...rest: any): Observable<RegisterResponse>;
 
-  login(request: LoginRequest): Observable<LoginResponse>;
+  login(request: LoginRequest, ...rest: any): Observable<LoginResponse>;
 
-  validateToken(request: ValidateTokenRequest): Observable<ValidateTokenResponse>;
+  validateToken(request: ValidateTokenRequest, ...rest: any): Observable<ValidateTokenResponse>;
 
-  refreshToken(request: RefreshTokenRequest): Observable<RefreshTokenResponse>;
+  refreshToken(request: RefreshTokenRequest, ...rest: any): Observable<RefreshTokenResponse>;
 }
 
 export interface AuthController {
-  register(request: RegisterRequest): Promise<RegisterResponse> | Observable<RegisterResponse> | RegisterResponse;
+  register(
+    request: RegisterRequest,
+    ...rest: any
+  ): Promise<RegisterResponse> | Observable<RegisterResponse> | RegisterResponse;
 
-  login(request: LoginRequest): Promise<LoginResponse> | Observable<LoginResponse> | LoginResponse;
+  login(request: LoginRequest, ...rest: any): Promise<LoginResponse> | Observable<LoginResponse> | LoginResponse;
 
   validateToken(
     request: ValidateTokenRequest,
+    ...rest: any
   ): Promise<ValidateTokenResponse> | Observable<ValidateTokenResponse> | ValidateTokenResponse;
 
   refreshToken(
     request: RefreshTokenRequest,
+    ...rest: any
   ): Promise<RefreshTokenResponse> | Observable<RefreshTokenResponse> | RefreshTokenResponse;
 }
 

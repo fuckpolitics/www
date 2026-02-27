@@ -59,34 +59,41 @@ export interface DeleteUserResponse {
 export const USER_PACKAGE_NAME = "user";
 
 export interface UserClient {
-  getUser(request: GetUserRequest): Observable<GetUserResponse>;
+  getUser(request: GetUserRequest, ...rest: any): Observable<GetUserResponse>;
 
-  getUserByEmail(request: GetUserByEmailRequest): Observable<GetUserResponse>;
+  getUserByEmail(request: GetUserByEmailRequest, ...rest: any): Observable<GetUserResponse>;
 
-  createUser(request: CreateUserRequest): Observable<CreateUserResponse>;
+  createUser(request: CreateUserRequest, ...rest: any): Observable<CreateUserResponse>;
 
-  updateUser(request: UpdateUserRequest): Observable<UpdateUserResponse>;
+  updateUser(request: UpdateUserRequest, ...rest: any): Observable<UpdateUserResponse>;
 
-  deleteUser(request: DeleteUserRequest): Observable<DeleteUserResponse>;
+  deleteUser(request: DeleteUserRequest, ...rest: any): Observable<DeleteUserResponse>;
 }
 
 export interface UserController {
-  getUser(request: GetUserRequest): Promise<GetUserResponse> | Observable<GetUserResponse> | GetUserResponse;
+  getUser(
+    request: GetUserRequest,
+    ...rest: any
+  ): Promise<GetUserResponse> | Observable<GetUserResponse> | GetUserResponse;
 
   getUserByEmail(
     request: GetUserByEmailRequest,
+    ...rest: any
   ): Promise<GetUserResponse> | Observable<GetUserResponse> | GetUserResponse;
 
   createUser(
     request: CreateUserRequest,
+    ...rest: any
   ): Promise<CreateUserResponse> | Observable<CreateUserResponse> | CreateUserResponse;
 
   updateUser(
     request: UpdateUserRequest,
+    ...rest: any
   ): Promise<UpdateUserResponse> | Observable<UpdateUserResponse> | UpdateUserResponse;
 
   deleteUser(
     request: DeleteUserRequest,
+    ...rest: any
   ): Promise<DeleteUserResponse> | Observable<DeleteUserResponse> | DeleteUserResponse;
 }
 

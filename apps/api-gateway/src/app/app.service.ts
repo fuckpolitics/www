@@ -3,6 +3,7 @@ import { MICROSERVICES_CONFIG, normalizeServiceName } from '@www/grpc-client';
 import { getMethodAccess } from '@www/common';
 import { MicroservicesService } from './microservices/microservices.service';
 import { MicroserviceRequestDto } from './dto';
+import { Metadata } from '@grpc/grpc-js';
 
 @Injectable()
 export class AppService {
@@ -10,16 +11,13 @@ export class AppService {
 
   async callMicroservice(callMicroserviceDto: MicroserviceRequestDto) {
     try {
+      const grpcMetadata = new Metadata();
+
       if (!callMicroserviceDto.service || !callMicroserviceDto.method) {
-        throw new HttpException(
-          'Service and method are required',
-          HttpStatus.BAD_REQUEST,
-        );
+        throw new HttpException('Service and method are required', HttpStatus.BAD_REQUEST);
       }
 
-      const normalizedServiceName = normalizeServiceName(
-        callMicroserviceDto.service,
-      );
+      const normalizedServiceName = normalizeServiceName(callMicroserviceDto.service);
 
       const serviceConfig = MICROSERVICES_CONFIG[normalizedServiceName];
       if (!serviceConfig) {
@@ -29,32 +27,19 @@ export class AppService {
         );
       }
 
-      const access = getMethodAccess(
-        serviceConfig.name,
-        callMicroserviceDto.method,
-      );
+      const access = getMethodAccess(serviceConfig.name, callMicroserviceDto.method);
       if (access?.isInternal) {
-        throw new HttpException(
-          'Method is not available via API',
-          HttpStatus.FORBIDDEN,
-        );
+        throw new HttpException('Method is not available via API', HttpStatus.FORBIDDEN);
       }
       if (access?.requiresAuth) {
         if (!callMicroserviceDto.token) {
-          throw new HttpException(
-            'Authentication required',
-            HttpStatus.UNAUTHORIZED,
-          );
+          throw new HttpException('Authentication required', HttpStatus.UNAUTHORIZED);
         }
-        const validation = await this.microservicesService.validateToken(
-          callMicroserviceDto.token,
-        );
+        const validation = await this.microservicesService.validateToken(callMicroserviceDto.token);
         if (!validation.valid) {
-          throw new HttpException(
-            'Invalid or expired token',
-            HttpStatus.UNAUTHORIZED,
-          );
+          throw new HttpException('Invalid or expired token', HttpStatus.UNAUTHORIZED);
         }
+        grpcMetadata.set('user-id', validation.userId);
       }
 
       const fullMethodName = `${serviceConfig.name}.${callMicroserviceDto.method}`;
@@ -65,6 +50,7 @@ export class AppService {
         normalizedServiceName,
         fullMethodName,
         data,
+        grpcMetadata,
       );
 
       return {

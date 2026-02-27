@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+package room;
+
+import "google/protobuf/empty.proto";
+import "utils.proto";
+import "user.proto";
+
+service Room {
+  rpc join (google.protobuf.Empty) returns (utils.BaseResponse);
+  rpc leave (google.protobuf.Empty) returns (utils.BaseResponse);
+  rpc getRoomInfo (google.protobuf.Empty) returns (RoomInfoResponse);
+}
+
+message RoomInfoResponse {
+  bool success = 1;
+  string message = 2;
+  string name = 3;
+  repeated user.GetUserResponse users = 4;
+}
+
