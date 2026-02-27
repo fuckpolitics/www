@@ -8,7 +8,6 @@
 import { GrpcMethod, GrpcStreamMethod } from "@nestjs/microservices";
 import { Observable } from "rxjs";
 import { Empty } from "./google/protobuf/empty";
-import { GetUserResponse } from "./user";
 import { BaseResponse } from "./utils";
 
 export const protobufPackage = "room";
@@ -17,7 +16,7 @@ export interface RoomInfoResponse {
   success: boolean;
   message: string;
   name: string;
-  users: GetUserResponse[];
+  users: string[];
 }
 
 export const ROOM_PACKAGE_NAME = "room";

@@ -46,7 +46,7 @@ export class AppService {
 
       const data = callMicroserviceDto.data || {};
 
-      const result = await this.microservicesService.callMicroservice(
+      const result: any = await this.microservicesService.callMicroservice(
         normalizedServiceName,
         fullMethodName,
         data,

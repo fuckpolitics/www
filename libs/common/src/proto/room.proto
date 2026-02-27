@@ -4,7 +4,6 @@ package room;
 
 import "google/protobuf/empty.proto";
 import "utils.proto";
-import "user.proto";
 
 service Room {
   rpc join (google.protobuf.Empty) returns (utils.BaseResponse);
@@ -16,6 +15,6 @@ message RoomInfoResponse {
   bool success = 1;
   string message = 2;
   string name = 3;
-  repeated user.GetUserResponse users = 4;
+  repeated string users = 4;
 }
 

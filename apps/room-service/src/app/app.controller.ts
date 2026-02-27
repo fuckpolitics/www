@@ -1,7 +1,6 @@
 import { AppService } from './app.service';
-import { Observable } from 'rxjs';
 import { RoomController, RoomControllerMethods, RoomInfoResponse } from '@www/common/generated-grpc/room';
-import { Empty } from '@www/common/generated-grpc/google/protobuf/empty';
+import { Observable } from 'rxjs';
 import { BaseResponse } from '@www/common/generated-grpc/utils';
 import { GrpcUserId } from '@www/common';
 
@@ -9,19 +8,18 @@ import { GrpcUserId } from '@www/common';
 export class AppController implements RoomController {
   constructor(private readonly appService: AppService) {}
 
-  getRoomInfo(
-    request: Empty,
-    ...rest: any
-  ): Promise<RoomInfoResponse> | Observable<RoomInfoResponse> | RoomInfoResponse {
-    return undefined;
+  getRoomInfo(): Promise<RoomInfoResponse> | Observable<RoomInfoResponse> | RoomInfoResponse {
+    const roomInfo = this.appService.getInfo();
+    return { success: true, message: 'Info response', ...roomInfo };
   }
 
-  join(request: Empty, @GrpcUserId() userId: string): Promise<BaseResponse> | Observable<BaseResponse> | BaseResponse {
-    console.log(request, userId);
-    return undefined;
+  join(@GrpcUserId() userId: string): Promise<BaseResponse> | Observable<BaseResponse> | BaseResponse {
+    this.appService.joinUser(userId);
+    return { success: true, message: 'Joined' };
   }
 
-  leave(request: Empty, ...rest: any): Promise<BaseResponse> | Observable<BaseResponse> | BaseResponse {
-    return undefined;
+  leave(@GrpcUserId() userId: string): Promise<BaseResponse> | Observable<BaseResponse> | BaseResponse {
+    this.appService.leaveUser(userId);
+    return { success: true, message: 'Leaved' };
   }
 }

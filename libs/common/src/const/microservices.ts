@@ -7,25 +7,25 @@ export type MethodDescriptor = {
 
 export const MICROSERVICES = {
   user: {
-    service: 'user',
-    getUser: { service: 'user', method: 'getUser', requiresAuth: true },
-    getUserByEmail: { service: 'user', method: 'getUserByEmail', isInternal: true },
-    createUser: { service: 'user', method: 'createUser' },
-    updateUser: { service: 'user', method: 'updateUser', requiresAuth: true },
-    deleteUser: { service: 'user', method: 'deleteUser', requiresAuth: true },
+    service: 'User',
+    getUser: { service: 'User', method: 'getUser', requiresAuth: true },
+    getUserByEmail: { service: 'User', method: 'getUserByEmail', isInternal: true },
+    createUser: { service: 'User', method: 'createUser' },
+    updateUser: { service: 'User', method: 'updateUser', requiresAuth: true },
+    deleteUser: { service: 'User', method: 'deleteUser', requiresAuth: true },
   },
   auth: {
-    service: 'auth',
-    register: { service: 'auth', method: 'register' },
-    login: { service: 'auth', method: 'login' },
-    validateToken: { service: 'auth', method: 'validateToken', isInternal: true },
-    refreshToken: { service: 'auth', method: 'refreshToken' },
+    service: 'Auth',
+    register: { service: 'Auth', method: 'register' },
+    login: { service: 'Auth', method: 'login' },
+    validateToken: { service: 'Auth', method: 'validateToken', isInternal: true },
+    refreshToken: { service: 'Auth', method: 'refreshToken' },
   },
   room: {
-    service: 'room',
-    join: { service: 'room', method: 'join', requiresAuth: true },
-    leave: { service: 'room', method: 'leave', requiresAuth: true },
-    getRoomInfo: { service: 'room', method: 'getRoomInfo', requiresAuth: true },
+    service: 'Room',
+    join: { service: 'Room', method: 'join', requiresAuth: true },
+    leave: { service: 'Room', method: 'leave', requiresAuth: true },
+    getRoomInfo: { service: 'Room', method: 'getRoomInfo', requiresAuth: true },
   },
 } as const;
 
