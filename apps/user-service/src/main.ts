@@ -1,32 +1,16 @@
 import { Logger, ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app/app.module';
-import { join, resolve } from 'path';
-import { MicroserviceOptions, Transport } from '@nestjs/microservices';
-import { config } from 'dotenv';
-import { PROTO_FILES } from '@www/common';
-
-config({ path: resolve(__dirname, '../../../.env') });
+import { AsyncOptions, GrpcOptions } from '@nestjs/microservices';
+import { getGrpcOptions } from '@www/grpc-client';
+import { ConfigService } from '@nestjs/config';
+import { UserContract } from '@www/grpc-contracts';
 
 async function bootstrap() {
-  const app = await NestFactory.createMicroservice<MicroserviceOptions>(
-    AppModule,
-    {
-      transport: Transport.GRPC,
-      options: {
-        package: 'user',
-        protoPath: join(__dirname, 'proto', PROTO_FILES.USER),
-        url: process.env.USER_SERVICE_URL || '0.0.0.0:50051',
-        loader: {
-          keepCase: true,
-          longs: String,
-          enums: String,
-          defaults: true,
-          arrays: true,
-        },
-      },
-    },
-  );
+  const app = await NestFactory.createMicroservice<AsyncOptions<GrpcOptions>>(AppModule, {
+    inject: [ConfigService],
+    useFactory: (config: ConfigService) => getGrpcOptions({ contract: UserContract, config }),
+  });
 
   app.useGlobalPipes(
     new ValidationPipe({
@@ -37,9 +21,7 @@ async function bootstrap() {
   );
 
   await app.listen();
-  Logger.log(
-    `🚀 User Service is running on: ${process.env.USER_SERVICE_URL || '0.0.0.0:50051'}`,
-  );
+  Logger.log('🚀 User Service is running...');
 }
 
 bootstrap();

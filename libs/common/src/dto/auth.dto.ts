@@ -1,12 +1,12 @@
+import { IsString, IsBoolean, IsEmail, MinLength, IsOptional } from 'class-validator';
 import {
-  IsString,
-  IsBoolean,
-  IsEmail,
-  MinLength,
-  IsOptional,
-} from 'class-validator';
+  LoginRequest,
+  RefreshTokenRequest,
+  RegisterRequest,
+  ValidateTokenRequest,
+} from '@www/grpc-contracts/generated/auth';
 
-export class RegisterRequest {
+export class RegisterRequestDto implements RegisterRequest {
   @IsEmail()
   email: string;
 
@@ -18,7 +18,7 @@ export class RegisterRequest {
   name: string;
 }
 
-export class LoginRequest {
+export class LoginRequestDto implements LoginRequest {
   @IsEmail()
   email: string;
 
@@ -26,12 +26,12 @@ export class LoginRequest {
   password: string;
 }
 
-export class ValidateTokenRequest {
+export class ValidateTokenRequestDto implements ValidateTokenRequest {
   @IsString()
   token: string;
 }
 
-export class RefreshTokenRequest {
+export class RefreshTokenRequestDto implements RefreshTokenRequest {
   @IsString()
   refreshToken: string;
 }
@@ -45,47 +45,4 @@ export class RegisterResponse {
 
   @IsString()
   userId: string;
-}
-
-export class LoginResponse {
-  @IsBoolean()
-  success: boolean;
-
-  @IsString()
-  message: string;
-
-  @IsString()
-  accessToken: string;
-
-  @IsString()
-  refreshToken: string;
-
-  @IsString()
-  userId: string;
-}
-
-export class ValidateTokenResponse {
-  @IsBoolean()
-  valid: boolean;
-
-  @IsString()
-  userId: string;
-
-  @IsString()
-  @IsOptional()
-  message?: string;
-}
-
-export class RefreshTokenResponse {
-  @IsBoolean()
-  success: boolean;
-
-  @IsString()
-  message: string;
-
-  @IsString()
-  accessToken: string;
-
-  @IsString()
-  refreshToken: string;
 }

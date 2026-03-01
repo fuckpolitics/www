@@ -16,9 +16,10 @@
     "baseUrl": ".",
     "paths": {
       "@www/common": ["libs/common/src/index.ts"],
-      "@www/common/generated-grpc/*": ["libs/common/src/generated-grpc/*"],
       "@www/database": ["libs/database/src/index.ts"],
-      "@www/grpc-client": ["libs/grpc-client/src/index.ts"]
+      "@www/grpc-client": ["libs/grpc-client/src/index.ts"],
+      "@www/grpc-contracts": ["libs/grpc-contracts/src/index.ts"],
+      "@www/grpc-contracts/generated/*": ["libs/grpc-contracts/src/generated/*"],
     }
   },
   "exclude": ["node_modules", "tmp"]

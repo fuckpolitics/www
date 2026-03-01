@@ -4,14 +4,18 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthCredential, RefreshToken } from '@www/common';
-import { MicroserviceClientModule } from '@www/grpc-client';
 import { config } from 'dotenv';
 import { resolve } from 'path';
+import { GrpcClientModule } from '@www/grpc-client';
+import { UserContract } from '@www/grpc-contracts';
+import { ConfigModule } from '@nestjs/config';
 
 config({ path: resolve(__dirname, '../../../.env') });
 
 @Module({
   imports: [
+    ConfigModule.forRoot({ isGlobal: true }),
+    GrpcClientModule.register({ contracts: [UserContract] }),
     TypeOrmModule.forRoot({
       type: 'postgres',
       host: process.env.DB_HOST || 'localhost',
@@ -25,7 +29,6 @@ config({ path: resolve(__dirname, '../../../.env') });
       logging: process.env.DB_LOGGING === 'true',
     }),
     TypeOrmModule.forFeature([AuthCredential, RefreshToken]),
-    MicroserviceClientModule,
     JwtModule.register({
       secret: process.env.JWT_SECRET || 'your-secret-key-change-in-production',
       signOptions: {

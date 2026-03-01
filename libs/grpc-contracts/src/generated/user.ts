@@ -25,8 +25,8 @@ export interface CreateUserRequest {
 
 export interface UpdateUserRequest {
   id: string;
-  name: string;
-  email: string;
+  name?: string | undefined;
+  email?: string | undefined;
 }
 
 export interface DeleteUserRequest {

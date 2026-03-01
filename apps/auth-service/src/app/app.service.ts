@@ -3,17 +3,13 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { JwtService } from '@nestjs/jwt';
 import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
-import {
-  RegisterRequest,
-  RegisterResponse,
-  LoginRequest,
-  LoginResponse,
-  ValidateTokenResponse,
-  RefreshTokenResponse,
-  Microservices,
-} from '@www/common';
-import { MicroserviceClientService } from '@www/grpc-client';
+import { LoginRequestDto, RegisterRequestDto, RegisterResponse } from '@www/common';
 import { AuthCredential, RefreshToken } from '@www/common';
+import { LoginResponse, RefreshTokenResponse, ValidateTokenResponse } from '@www/grpc-contracts/generated/auth';
+import { UserContract } from '@www/grpc-contracts';
+import { UserClient } from '@www/grpc-contracts/generated/user';
+import { lastValueFrom } from 'rxjs';
+import { InjectGrpcClient } from '@www/grpc-client';
 
 @Injectable()
 export class AppService {
@@ -21,19 +17,20 @@ export class AppService {
 
   constructor(
     private readonly jwtService: JwtService,
-    private readonly microserviceClient: MicroserviceClientService,
     @InjectRepository(AuthCredential)
     private readonly authCredentialRepo: Repository<AuthCredential>,
     @InjectRepository(RefreshToken)
     private readonly refreshTokenRepo: Repository<RefreshToken>,
+    @InjectGrpcClient(UserContract) private readonly userClient: UserClient,
   ) {}
 
-  async register(data: RegisterRequest): Promise<RegisterResponse> {
+  async register(data: RegisterRequestDto): Promise<RegisterResponse> {
     this.logger.log(`Registering user: ${data.email}`);
 
     try {
       this.logger.log(`Checking if user exists: ${data.email}`);
-      await this.microserviceClient.call(Microservices.user.getUserByEmail, { email: data.email });
+      // await this.microserviceClient.call(Microservices.user.getUserByEmail, { email: data.email });
+      await lastValueFrom(this.userClient.getUserByEmail({ email: data.email }));
       this.logger.warn(`User already exists: ${data.email}`);
       throw new ConflictException('User with this email already exists');
     } catch (error: any) {
@@ -46,10 +43,13 @@ export class AppService {
         this.logger.log(`User not found, creating new user: ${data.email}`);
         try {
           this.logger.log(`Creating user via user-service: ${JSON.stringify({ name: data.name, email: data.email })}`);
-          const createUserResponse: any = await this.microserviceClient.call(Microservices.user.createUser, {
-            name: data.name,
-            email: data.email,
-          });
+          // const createUserResponse: any = await this.microserviceClient.call(Microservices.user.createUser, {
+          //   name: data.name,
+          //   email: data.email,
+          // });
+          const createUserResponse = await lastValueFrom(
+            this.userClient.createUser({ name: data.name, email: data.email }),
+          );
 
           this.logger.log(`User created successfully: ${JSON.stringify(createUserResponse)}`);
 
@@ -67,9 +67,7 @@ export class AppService {
         } catch (createError: any) {
           this.logger.error(`Error creating user:`, createError);
           this.logger.error(`Create error details - code: ${createError.code}, message: ${createError.message}`);
-          throw new ConflictException(
-            createError.message || 'Failed to create user',
-          );
+          throw new ConflictException(createError.message || 'Failed to create user');
         }
       }
       if (errorMessage.includes('already exists') || errorCode === 6) {
@@ -81,12 +79,13 @@ export class AppService {
     }
   }
 
-  async login(data: LoginRequest): Promise<LoginResponse> {
+  async login(data: LoginRequestDto): Promise<LoginResponse> {
     this.logger.log(`Login attempt for: ${data.email}`);
 
     try {
       this.logger.log(`Fetching user by email: ${data.email}`);
-      const user: any = await this.microserviceClient.call(Microservices.user.getUserByEmail, { email: data.email });
+      // const user: any = await this.microserviceClient.call(Microservices.user.getUserByEmail, { email: data.email });
+      const user = await lastValueFrom(this.userClient.getUserByEmail({ email: data.email }));
       this.logger.log(`User found: ${JSON.stringify({ id: user.id, email: user.email })}`);
 
       const credential = await this.authCredentialRepo.findOne({ where: { email: data.email } });

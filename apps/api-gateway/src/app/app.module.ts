@@ -1,13 +1,10 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { GrpcModule } from './grpc/grpc.module';
-import { MicroservicesModule } from './microservices/microservices.module';
-import { AppService } from './app.service';
 import { EventsGateway } from './events.gateway';
+import { GrpcGatewayModule } from './grpc-gateway/grpc-gateway.module';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
-  imports: [GrpcModule, MicroservicesModule],
-  controllers: [AppController],
-  providers: [AppService, EventsGateway],
+  imports: [ConfigModule.forRoot({ isGlobal: true }), GrpcGatewayModule],
+  providers: [EventsGateway],
 })
 export class AppModule {}

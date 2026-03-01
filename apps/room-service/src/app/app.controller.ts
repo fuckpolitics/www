@@ -1,8 +1,8 @@
 import { AppService } from './app.service';
-import { RoomController, RoomControllerMethods, RoomInfoResponse } from '@www/common/generated-grpc/room';
 import { Observable } from 'rxjs';
-import { BaseResponse } from '@www/common/generated-grpc/utils';
-import { GrpcUserId } from '@www/common';
+import { RoomController, RoomControllerMethods, RoomInfoResponse } from '@www/grpc-contracts/generated/room';
+import { BaseResponse } from '@www/grpc-contracts/generated/utils';
+import { GrpcUserId } from '@www/grpc-client';
 
 @RoomControllerMethods()
 export class AppController implements RoomController {

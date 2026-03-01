@@ -15,7 +15,7 @@ export class AppService {
   async getUser(id: string) {
     this.logger.log(`Getting user with id: ${id}`);
     const user = await this.userRepository.findOne({ where: { id } });
-    
+
     if (!user) {
       throw new NotFoundException(`User with id ${id} not found`);
     }
@@ -31,7 +31,7 @@ export class AppService {
   async getUserByEmail(email: string) {
     this.logger.log(`Getting user with email: ${email}`);
     const user = await this.userRepository.findOne({ where: { email } });
-    
+
     if (!user) {
       throw new NotFoundException(`User with email ${email} not found`);
     }
@@ -46,7 +46,7 @@ export class AppService {
 
   async createUser(data: { name: string; email: string }) {
     this.logger.log(`Creating user: ${JSON.stringify(data)}`);
-    
+
     const user = this.userRepository.create({
       name: data.name,
       email: data.email,
@@ -63,7 +63,7 @@ export class AppService {
 
   async updateUser(data: { id: string; name?: string; email?: string }) {
     this.logger.log(`Updating user ${data.id}`);
-    
+
     const user = await this.userRepository.findOne({ where: { id: data.id } });
     if (!user) {
       throw new NotFoundException(`User with id ${data.id} not found`);
@@ -82,9 +82,9 @@ export class AppService {
 
   async deleteUser(id: string) {
     this.logger.log(`Deleting user ${id}`);
-    
+
     const result = await this.userRepository.delete(id);
-    
+
     if (result.affected === 0) {
       throw new NotFoundException(`User with id ${id} not found`);
     }

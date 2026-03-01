@@ -9,7 +9,7 @@ export const GrpcUserId = createParamDecorator((data: never, ctx: ExecutionConte
   if (!userIdValues || userIdValues.length === 0) {
     throw new RpcException({
       code: status.UNAUTHENTICATED,
-      message: 'User ID is missing in metadata',
+      message: 'User Id is missing in metadata',
     });
   }
 

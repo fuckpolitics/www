@@ -1,30 +1,23 @@
-import { IsString, IsBoolean, IsNumber, IsOptional, IsUUID } from 'class-validator';
+import { IsString, IsOptional, IsUUID } from 'class-validator';
+import {
+  CreateUserRequest,
+  DeleteUserRequest,
+  GetUserByEmailRequest,
+  GetUserRequest,
+  UpdateUserRequest,
+} from '@www/grpc-contracts/generated/user';
 
-export class GetUserRequest {
+export class GetUserRequestDto implements GetUserRequest {
   @IsUUID()
   id: string;
 }
 
-export class GetUserByEmailRequest {
+export class GetUserByEmailRequestDto implements GetUserByEmailRequest {
   @IsString()
   email: string;
 }
 
-export class GetUserResponse {
-  @IsString()
-  id: string;
-
-  @IsString()
-  name: string;
-
-  @IsString()
-  email: string;
-
-  @IsNumber()
-  createdAt: number;
-}
-
-export class CreateUserRequest {
+export class CreateUserRequestDto implements CreateUserRequest {
   @IsString()
   name: string;
 
@@ -32,18 +25,7 @@ export class CreateUserRequest {
   email: string;
 }
 
-export class CreateUserResponse {
-  @IsString()
-  id: string;
-
-  @IsBoolean()
-  success: boolean;
-
-  @IsString()
-  message: string;
-}
-
-export class UpdateUserRequest {
+export class UpdateUserRequestDto implements UpdateUserRequest {
   @IsUUID()
   id: string;
 
@@ -56,23 +38,7 @@ export class UpdateUserRequest {
   email?: string;
 }
 
-export class UpdateUserResponse {
-  @IsBoolean()
-  success: boolean;
-
-  @IsString()
-  message: string;
-}
-
-export class DeleteUserRequest {
+export class DeleteUserRequestDto implements DeleteUserRequest {
   @IsUUID()
   id: string;
-}
-
-export class DeleteUserResponse {
-  @IsBoolean()
-  success: boolean;
-
-  @IsString()
-  message: string;
 }
